@@ -14,6 +14,11 @@
 		8F213DE429A73D8800E0DB59 /* cs125BackendTestingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213DE329A73D8800E0DB59 /* cs125BackendTestingTests.swift */; };
 		8F213DEE29A73D8800E0DB59 /* cs125BackendTestingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213DED29A73D8800E0DB59 /* cs125BackendTestingUITests.swift */; };
 		8F213DF029A73D8800E0DB59 /* cs125BackendTestingUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213DEF29A73D8800E0DB59 /* cs125BackendTestingUITestsLaunchTests.swift */; };
+		8F213DFF29A7450900E0DB59 /* UserSleepDataRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213DFE29A7450900E0DB59 /* UserSleepDataRetriever.swift */; };
+		8F213E0129A7452700E0DB59 /* UserSleepDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213E0029A7452700E0DB59 /* UserSleepDatabase.swift */; };
+		8F213E0329A7453A00E0DB59 /* PersonalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213E0229A7453A00E0DB59 /* PersonalModel.swift */; };
+		8F213E0529A7455400E0DB59 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213E0429A7455400E0DB59 /* Calendar.swift */; };
+		8F213E0729A7456900E0DB59 /* CalendarEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213E0629A7456900E0DB59 /* CalendarEvent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +49,12 @@
 		8F213DE929A73D8800E0DB59 /* cs125BackendTestingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cs125BackendTestingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F213DED29A73D8800E0DB59 /* cs125BackendTestingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cs125BackendTestingUITests.swift; sourceTree = "<group>"; };
 		8F213DEF29A73D8800E0DB59 /* cs125BackendTestingUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cs125BackendTestingUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		8F213DFD29A7438600E0DB59 /* cs125BackendTesting.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cs125BackendTesting.entitlements; sourceTree = "<group>"; };
+		8F213DFE29A7450900E0DB59 /* UserSleepDataRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSleepDataRetriever.swift; sourceTree = "<group>"; };
+		8F213E0029A7452700E0DB59 /* UserSleepDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSleepDatabase.swift; sourceTree = "<group>"; };
+		8F213E0229A7453A00E0DB59 /* PersonalModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalModel.swift; sourceTree = "<group>"; };
+		8F213E0429A7455400E0DB59 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
+		8F213E0629A7456900E0DB59 /* CalendarEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEvent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +85,7 @@
 		8F213DC629A73D8500E0DB59 = {
 			isa = PBXGroup;
 			children = (
+				8F213DFC29A73D9E00E0DB59 /* src */,
 				8F213DD129A73D8500E0DB59 /* cs125BackendTesting */,
 				8F213DE229A73D8800E0DB59 /* cs125BackendTestingTests */,
 				8F213DEC29A73D8800E0DB59 /* cs125BackendTestingUITests */,
@@ -94,6 +106,7 @@
 		8F213DD129A73D8500E0DB59 /* cs125BackendTesting */ = {
 			isa = PBXGroup;
 			children = (
+				8F213DFD29A7438600E0DB59 /* cs125BackendTesting.entitlements */,
 				8F213DD229A73D8500E0DB59 /* cs125BackendTestingApp.swift */,
 				8F213DD429A73D8500E0DB59 /* ContentView.swift */,
 				8F213DD629A73D8800E0DB59 /* Assets.xcassets */,
@@ -125,6 +138,18 @@
 				8F213DEF29A73D8800E0DB59 /* cs125BackendTestingUITestsLaunchTests.swift */,
 			);
 			path = cs125BackendTestingUITests;
+			sourceTree = "<group>";
+		};
+		8F213DFC29A73D9E00E0DB59 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				8F213DFE29A7450900E0DB59 /* UserSleepDataRetriever.swift */,
+				8F213E0029A7452700E0DB59 /* UserSleepDatabase.swift */,
+				8F213E0229A7453A00E0DB59 /* PersonalModel.swift */,
+				8F213E0429A7455400E0DB59 /* Calendar.swift */,
+				8F213E0629A7456900E0DB59 /* CalendarEvent.swift */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,8 +282,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F213DFF29A7450900E0DB59 /* UserSleepDataRetriever.swift in Sources */,
+				8F213E0529A7455400E0DB59 /* Calendar.swift in Sources */,
 				8F213DD529A73D8500E0DB59 /* ContentView.swift in Sources */,
 				8F213DD329A73D8500E0DB59 /* cs125BackendTestingApp.swift in Sources */,
+				8F213E0129A7452700E0DB59 /* UserSleepDatabase.swift in Sources */,
+				8F213E0329A7453A00E0DB59 /* PersonalModel.swift in Sources */,
+				8F213E0729A7456900E0DB59 /* CalendarEvent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,12 +444,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = cs125BackendTesting/cs125BackendTesting.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"cs125BackendTesting/Preview Content\"";
 				DEVELOPMENT_TEAM = 8MHXZ2X45R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -443,12 +476,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = cs125BackendTesting/cs125BackendTesting.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"cs125BackendTesting/Preview Content\"";
 				DEVELOPMENT_TEAM = 8MHXZ2X45R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
