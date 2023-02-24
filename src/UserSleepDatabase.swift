@@ -31,20 +31,27 @@ class UserSleepDatabase{
         
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .day, .month], from: date)
-        let year_: Int? = components.year
-        let month_: Int? = components.month
-        let day_: Int? = components.day
+        let year_: Int = components.year!
+        let month_: Int = components.month!
+        let day_: Int = components.day!
         
-        return self.sleepDatabase[year_!]![month_!]![day_!]!
+        return self.sleepDatabase[year_]![month_]![day_]!
     }
     
     public func addData(date: Date, data: SleepData) -> Void{
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from : date)
-        let year_ : Int? = components.year
-        let month_: Int? = components.month
-        let day_: Int? = components.day
+        let year_ : Int = components.year!
+        let month_: Int = components.month!
+        let day_: Int = components.day!
         
-        self.sleepDatabase[year_!]![month_!]![day_!] = data
+        if (self.sleepDatabase[year_] == nil){
+            self.sleepDatabase[year_] = Dictionary<Int, Dictionary<Int, SleepData>>()
+        }
+        if (self.sleepDatabase[year_]![month_] == nil){
+            self.sleepDatabase[year_]![month_] = Dictionary<Int, SleepData>()
+        }
+        
+        self.sleepDatabase[year_]![month_]![day_] = data
     }
 }

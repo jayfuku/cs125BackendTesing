@@ -27,11 +27,21 @@ class UserCalendar {
         
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .day, .month], from: date)
-        let year_: Int? = components.year
-        let month_: Int? = components.month
-        let day_: Int? = components.day
+        let year_: Int = components.year!
+        let month_: Int = components.month!
+        let day_: Int = components.day!
         
-        self.calendar[year_!]![month_!]![day_!]!.append(event)
+        if (self.calendar[year_] == nil){
+            self.calendar[year_]! = Dictionary<Int, Dictionary<Int, [CalendarEvent]>>()
+        }
+        if (self.calendar[year_]![month_] == nil) {
+            self.calendar[year_]![month_] = Dictionary<Int, [CalendarEvent]>()
+        }
+        if (self.calendar[year_]![month_]![day_] == nil){
+            self.calendar[year_]![month_]![day_] = []
+        }
+        
+        self.calendar[year_]![month_]![day_]!.append(event)
     }
     
     public func getEventByDay(_ date: Date) -> [CalendarEvent]{
