@@ -19,6 +19,7 @@ struct cs125BackendTestingApp: App {
 }
 
 func randomData(_ number: Int) -> ([Date], [SleepData]) {
+    //Generate nonsensical random data
     var sleepData: [SleepData] = []
     var dateData: [Date] = []
     let userCalendar = Calendar.current
@@ -37,6 +38,34 @@ func randomData(_ number: Int) -> ([Date], [SleepData]) {
         dateComponent.minute = Int.random(in: 0...59)
         let wokeDate = userCalendar.date(from:dateComponent)
         sleepData.append(SleepData(Time: Int.random(in: 1...8), slept: sleptDate!, woke: wokeDate!))
+        dateData.append(sleptDate!)
+    }
+    return (dateData, sleepData)
+}
+
+func goodRandomData(_ number: Int) -> ([Date], [SleepData]) {
+    //Generate sensical random data
+    var sleepData: [SleepData] = []
+    var dateData: [Date] = []
+    let userCalendar = Calendar.current
+    var dateComponent = DateComponents()
+    for _ in 0..<number{
+        var sleptHours = 0
+        dateComponent.year = Int.random(in: 2022...2023)
+        dateComponent.month = Int.random(in: 1...12)
+        dateComponent.day = Int.random(in: 1...28)
+        dateComponent.hour = Int.random(in: 22...24)
+        dateComponent.minute = 0
+        sleptHours = 24 - dateComponent.hour!
+        let sleptDate = userCalendar.date(from: dateComponent)
+        dateComponent.year = Int.random(in: 2022...2023)
+        dateComponent.month = Int.random(in: 1...12)
+        dateComponent.day = Int.random(in: 1...28)
+        dateComponent.hour = Int.random(in: 6...8)
+        dateComponent.minute = 0
+        sleptHours += dateComponent.hour!
+        let wokeDate = userCalendar.date(from:dateComponent)
+        sleepData.append(SleepData(Time: sleptHours, slept: sleptDate!, woke: wokeDate!))
         dateData.append(sleptDate!)
     }
     return (dateData, sleepData)
@@ -130,7 +159,7 @@ func start(){
     print("Test 3 complete\n")
     
     
-    print("Testing personal model with random data")
+    print("Testing personal model with consistent data")
     let personalModel = PersonalModel()
     (dateData, sleptData) = consistentData(50) //Generate 50 pieces of data all with consistent sleep
     for i in 0..<sleptData.count{
@@ -142,6 +171,41 @@ func start(){
     print("Test 1 Complete")
     print("2. GoodSleepAmount")
     assert(personalModel.getGoodSleepAmnt(), "Errpr: Mocked data should be returning true for good sleep amount")
-    print("Test 2 complete")
+    print("Test 2 complete\n")
     
+    print("Testing Personal Model with random but sensible data")
+    personalModel._clearModel()
+    (dateData, sleptData) = goodRandomData(50)
+    for i in 0..<sleptData.count{
+        personalModel.updateAll(data: sleptData[i])
+    }
+    print(String(repeating:"-", count: 20))
+    print("PASTE INTO STANDARD DEVIATION or AVERAGE CALCULATOR FOR MANUAL VERIFICATION")
+    for i in 0..<sleptData.count{
+        print(String(sleptData[i].Time) + ", ", terminator: "")
+    }
+    print("\n")
+    print(String(repeating:"-", count: 20))
+    print("Result of consistent sleep with 50 pieces of sensible data:", personalModel.getConsistentSleep())
+    print("Result of goodSleepAmnt with 50 pieces of snesible data:", personalModel.getGoodSleepAmnt())
+    print("Complete\n")
+    
+    //TESTING FOR ERRORS NOT ACCURACY
+    print("Testing Calendar")
+    let calendar = UserCalendar()
+    print("Testing single event insertion and retrieval")
+    let testDate = Date.now
+    calendar.addEvent(testDate, "Do Laundry", "I really need to do laundry")
+    var event = calendar.getEventByDay(testDate)
+    print("Test complete")
+    print("Testing 100 insertions and retrievals")
+    (dateData, sleptData) = randomData(100)
+    for i in dateData{
+        calendar.addEvent(i, "TEST", "TESTING123")
+    }
+    print("Insertions Complete")
+    for i in dateData{
+        event = calendar.getEventByDay(i)
+    }
+    print("Retrievals complete\n")
 }

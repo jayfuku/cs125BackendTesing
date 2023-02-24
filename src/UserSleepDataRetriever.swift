@@ -6,14 +6,16 @@
 //
 
 import Foundation
+import HealthKit
 
 class UserSleepDataRetriever {
     //An instance of this gets created every day
     
     private var currentDay: Date;
-    private var HKStore: Int //Needs to be changed of HKHealthstore type once in actual app
+    private var HKStore: HKHealthStore //Needs to be changed of HKHealthstore type once in actual app
     
-    init(HKStore:Int){
+    init(HKStore: HKHealthStore){
+        //HKHealthStore object should already be authorized before being placed in this class
         self.currentDay = Date.now;
         self.HKStore = HKStore;
     }

@@ -42,6 +42,13 @@ class PersonalModel {
         self.goodSleepAmnt = false
     }
     
+    public func _clearModel(){
+        //ONLY FOR TESTING, clear the personal model of all data
+        //TODO: Remove in actual app
+        self.totSleepAmnts = sleepAmnts(week: [], month: [], year: [])
+        self.totSleepTimes = sleepTimes(week: [], month: [], year: [])
+    }
+    
     public func updateAll(data: SleepData) -> Void{
         //This function is called everyday when the user wakes up
         //Takes in the most recent SleepData and uses it to update members
@@ -110,6 +117,7 @@ class PersonalModel {
     
     private func updateConsistentSleep() -> Void{
         //Use standard deviation to see if user gets consistent sleep over the past week
+        //TODO: Test standard deviation formula with better, more varied data
         let mean = self.getAverage(self.totSleepTimes.week)
         var top = 0.0
         var bottom = 0.0
@@ -131,7 +139,8 @@ class PersonalModel {
     
     private func updateGoodSleepAmnt() -> Void{
         let avg = self.getAverage(self.totSleepTimes.week)
-        if (avg >= 6) {
+        if (6 <= avg && avg <= 11) {
+            //CDC study shows more than ~10 hours is an unsafe amount of sleep
             self.goodSleepAmnt = true
         }
         else{

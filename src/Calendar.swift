@@ -23,6 +23,7 @@ class UserCalendar {
     
     public func addEvent(_ date: Date, _ name: String, _ desc: String){
         //Add an event to the calendar given a date name and description
+        //TODO: What should happen if the event already exists on that day and time?
         let event = CalendarEvent(date, name, desc)
         
         let calendar = Calendar.current
@@ -32,7 +33,7 @@ class UserCalendar {
         let day_: Int = components.day!
         
         if (self.calendar[year_] == nil){
-            self.calendar[year_]! = Dictionary<Int, Dictionary<Int, [CalendarEvent]>>()
+            self.calendar[year_] = Dictionary<Int, Dictionary<Int, [CalendarEvent]>>()
         }
         if (self.calendar[year_]![month_] == nil) {
             self.calendar[year_]![month_] = Dictionary<Int, [CalendarEvent]>()
