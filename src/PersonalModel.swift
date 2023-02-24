@@ -51,6 +51,14 @@ class PersonalModel {
         self.updateGoodSleepAmnt()
     }
     
+    public func getConsistentSleep() -> Bool{
+        return self.consistentSleep
+    }
+    
+    public func getGoodSleepAmnt() -> Bool{
+        return self.goodSleepAmnt
+    }
+    
     private func getAverage(_ totals: [Int]) -> Float{
         //Helper function to get the average sleep of an array
         // Ex: getAverageSleepTime(self.totSleepTimes.week) to get average of week
@@ -130,4 +138,6 @@ class PersonalModel {
             self.goodSleepAmnt = false
         }
     }
+    
+    //TODO: Recommendation algorithm should interface with personal model or be a part of it
 }

@@ -18,6 +18,60 @@ struct cs125BackendTestingApp: App {
     }
 }
 
+func randomData(_ number: Int) -> ([Date], [SleepData]) {
+    var sleepData: [SleepData] = []
+    var dateData: [Date] = []
+    let userCalendar = Calendar.current
+    var dateComponent = DateComponents()
+    for _ in 0..<number{
+        dateComponent.year = Int.random(in: 2022...2023)
+        dateComponent.month = Int.random(in: 1...12)
+        dateComponent.day = Int.random(in: 1...28)
+        dateComponent.hour = Int.random(in: 0...24)
+        dateComponent.minute = Int.random(in: 0...59)
+        let sleptDate = userCalendar.date(from: dateComponent)
+        dateComponent.year = Int.random(in: 2022...2023)
+        dateComponent.month = Int.random(in: 1...12)
+        dateComponent.day = Int.random(in: 1...28)
+        dateComponent.hour = Int.random(in: 0...24)
+        dateComponent.minute = Int.random(in: 0...59)
+        let wokeDate = userCalendar.date(from:dateComponent)
+        sleepData.append(SleepData(Time: Int.random(in: 1...8), slept: sleptDate!, woke: wokeDate!))
+        dateData.append(sleptDate!)
+    }
+    return (dateData, sleepData)
+}
+
+func consistentData(_ number: Int) -> ([Date], [SleepData]){
+    //Generate data with consistent sleep times
+    var sleepData: [SleepData] = []
+    var dateData: [Date] = []
+    let userCalendar = Calendar.current
+    var dateComponent = DateComponents()
+    for _ in 0..<number{
+        dateComponent.year = Int.random(in: 2022...2023)
+        dateComponent.month = Int.random(in: 1...12)
+        dateComponent.day = Int.random(in: 1...28)
+        dateComponent.hour = Int.random(in: 0...24)
+        dateComponent.minute = Int.random(in: 0...59)
+        let sleptDate = userCalendar.date(from: dateComponent)
+        dateComponent.year = Int.random(in: 2022...2023)
+        dateComponent.month = Int.random(in: 1...12)
+        dateComponent.day = Int.random(in: 1...28)
+        dateComponent.hour = Int.random(in: 0...24)
+        dateComponent.minute = Int.random(in: 0...59)
+        let wokeDate = userCalendar.date(from:dateComponent)
+        sleepData.append(SleepData(Time: 8, slept: sleptDate!, woke: wokeDate!))
+        dateData.append(sleptDate!)
+    }
+    return (dateData, sleepData)
+}
+
+func compareSleepData( _ one: SleepData, _ two: SleepData) -> Bool{
+    //Helper function to compare two SleepData
+    return one.slept == two.slept && one.woke == two.woke && one.Time == two.Time
+}
+
 func start(){
     let sleepDatabase = UserSleepDatabase()
     
@@ -39,11 +93,55 @@ func start(){
     let testSleepData = SleepData(Time: 8, slept: sleepDate!, woke: wokeDate!)
     
     sleepDatabase.addData(date: sleepDate!, data: testSleepData)
-    let retData = sleepDatabase.getData(date: sleepDate!)
+    var retData = sleepDatabase.getData(date: sleepDate!)
     assert(retData.Time == testSleepData.Time &&
            retData.slept == testSleepData.slept &&
            retData.woke == testSleepData.woke,
-           "Error, returned data was not the same as inserted data"
+           "Error: returned data was not the same as inserted data"
     )
-    print("Test 1 successful")
+    print("Test 1 successful\n")
+    
+    //TESTING FOR ERRORS, NOT ACCURACY
+    print("2. Inserting 7 pieces of random data")
+    var (dateData, sleptData) = randomData(7)
+    print("Testing 7 insertions")
+    for i in 0..<sleptData.count{
+        sleepDatabase.addData(date: dateData[i], data: sleptData[i])
+    }
+    print("Insertions complete")
+    print("Attempting to retrieve all data")
+    for i in 0..<sleptData.count{
+        retData = sleepDatabase.getData(date: dateData[i])
+    }
+    print("Test 2 successful\n")
+    
+    //TESTING FOR ERRORS, NOT ACCURACY
+    print("3. Inserting 100 pieces of random data")
+    (dateData, sleptData) = randomData(100)
+    print("Testing 100 insertions")
+    for i in 0..<sleptData.count{
+        sleepDatabase.addData(date: dateData[i], data: sleptData[i])
+    }
+    print("Insertions complete")
+    print("Attempting to retrieve all data")
+    for i in 0..<sleptData.count{
+        retData = sleepDatabase.getData(date: dateData[i])
+    }
+    print("Test 3 complete\n")
+    
+    
+    print("Testing personal model with random data")
+    let personalModel = PersonalModel()
+    (dateData, sleptData) = consistentData(50) //Generate 50 pieces of data all with consistent sleep
+    for i in 0..<sleptData.count{
+        personalModel.updateAll(data: sleptData[i])
+    }
+    
+    print("1. ConsistentSleep")
+    assert(personalModel.getConsistentSleep(), "Error: Mocked data should be returning true for consistent sleep")
+    print("Test 1 Complete")
+    print("2. GoodSleepAmount")
+    assert(personalModel.getGoodSleepAmnt(), "Errpr: Mocked data should be returning true for good sleep amount")
+    print("Test 2 complete")
+    
 }

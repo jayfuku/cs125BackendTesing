@@ -39,6 +39,7 @@ class UserSleepDatabase{
     }
     
     public func addData(date: Date, data: SleepData) -> Void{
+        //TODO: What should happen if a day already has data for any reason?
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from : date)
         let year_ : Int = components.year!
