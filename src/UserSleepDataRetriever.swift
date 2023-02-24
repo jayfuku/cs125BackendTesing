@@ -8,6 +8,8 @@
 import Foundation
 import HealthKit
 
+//TODO: Conversion from +0000 to local timezone
+
 class UserSleepDataRetriever {
     //An instance of this gets created every day
     
