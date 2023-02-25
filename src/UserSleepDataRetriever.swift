@@ -8,8 +8,6 @@
 import Foundation
 import HealthKit
 
-//TODO: Conversion from +0000 to local timezone		
-
 class UserSleepDataRetriever {
     //An instance of this gets created every day
     
@@ -36,7 +34,7 @@ class UserSleepDataRetriever {
         print("Finish getting permissions")
     }
     
-    private func executeQuery(_ number: Int = 20) -> SleepData {
+    private func executeQuery(_ number: Int) -> Void {
         //Create query to get sleep data of most recent sleep
         // Params:
         //      number: Amount of data to retrieve, default 20
@@ -44,36 +42,53 @@ class UserSleepDataRetriever {
         
         let sleepType = HKCategoryType(.sleepAnalysis)
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
-        let sampleQuery = HKSampleQuery(sampleType: sleepType, predicate: nil, limit: 30, sortDescriptors: [sortDescriptor]) { (query, tmpResult, error) in
+        
+        let sampleQuery = HKSampleQuery(sampleType: sleepType, predicate: nil, limit: number, sortDescriptors: [sortDescriptor]) { (query, tmpResult, error) in
                 //TODO: How to get values out of callback function?
+                //TODO: Analyze healkit api retrieved data deeper and see what causes gaps in inBed status
                 retSleepData.Time = 1
                 if error != nil{
                     print("Error")
                     return
                 }
                 if let result = tmpResult{
-                    for item in result {
-                        //TODO: Parse results and create real SleepData
-                        //NOTE: Query should keep sampling until we reach the point when the user was not asleep
+                    if let sample = result[0] as? HKCategorySample{
+                        let value = (sample.value == HKCategoryValueSleepAnalysis.inBed.rawValue)
+                        retSleepData.slept = sample.startDate
+                        retSleepData.woke = sample.endDate
+                    }
+                    for item in result[1...] {
                         if let sample = item as? HKCategorySample{
+                            
                             let value = (sample.value == HKCategoryValueSleepAnalysis.inBed.rawValue)
-                            print("Healthkit Sleep: \(sample.startDate) \(sample.endDate) - value \(value)")
+                            
+                            print("Healthkit Sleep:\n\t \(sample.startDate)\n\t \(sample.endDate) \n\t- value \(value)")
+                            if (self.timeBetweenDates(retSleepData.slept, sample.endDate) <= 1.5){
+                                retSleepData.slept = sample.startDate
+                            }
+                            else{
+                                break
+                            }
                         }
                     }
+                    retSleepData.Time = self.timeBetweenDates(retSleepData.woke, retSleepData.slept)
+                    // ^^ this ret sleep data is the sleep data for the day
                 }
         }
         
         //TODO: Queries happen async, need to work around it
         self.HKStore.execute(sampleQuery)
-        return retSleepData
+        //TODO: Discuss what should happen if the query gets the users sleep data wrong, should it prompt user the enter manually?
     }
     
     
-    public func retrieveData(_ number: Int = 20) -> SleepData{
+    public func retrieveData(_ number: Int = 20) -> Void{
         //Get data from Apple health data
         assert(HKHealthStore.isHealthDataAvailable(), "Error: No data available")
-        return executeQuery()
+        executeQuery(number)
     }
     
-    
+    private func timeBetweenDates(_ endDate: Date, _ startDate: Date) -> Double {
+        return endDate.timeIntervalSince(startDate) / 3600
+    }
 }

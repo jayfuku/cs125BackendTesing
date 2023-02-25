@@ -8,7 +8,7 @@
 import Foundation
 
 struct SleepData {
-    var Time: Int
+    var Time: Double
     var slept: Date
     var woke: Date
 }

@@ -9,16 +9,16 @@ import Foundation
 
 struct sleepAmnts {
     //Struct that contains the total sleep amounts from the past week, month, and year
-    var week: [Int]
-    var month: [Int]
-    var year: [Int]
+    var week: [Double]
+    var month: [Double]
+    var year: [Double]
 }
 
 struct sleepTimes {
     //Struct that contains sleep times from the apst week, month, and year
-    var week: [Int]
-    var month: [Int]
-    var year: [Int]
+    var week: [Double]
+    var month: [Double]
+    var year: [Double]
 }
 
 class PersonalModel {
@@ -66,11 +66,11 @@ class PersonalModel {
         return self.goodSleepAmnt
     }
     
-    private func getAverage(_ totals: [Int]) -> Float{
+    private func getAverage(_ totals: [Double]) -> Float{
         //Helper function to get the average sleep of an array
         // Ex: getAverageSleepTime(self.totSleepTimes.week) to get average of week
         var count = 0
-        var total = 0
+        var total = 0.0
         for time in totals{
             count += 1
             total += time
@@ -98,7 +98,7 @@ class PersonalModel {
     
     private func updateSleepAmnts(_ data: SleepData) -> Void{
         let calendar = Calendar.current
-        let hour = calendar.component(.hour, from: data.woke)
+        let hour = Double(calendar.component(.hour, from: data.woke))
         if (self.totSleepAmnts.week.count == 7) {
             self.totSleepAmnts.week.removeFirst(1)
         }

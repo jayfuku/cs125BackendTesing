@@ -22,7 +22,7 @@ struct cs125BackendTestingApp: App {
 
 func retrievalTest()  -> Void {
     let retriever = UserSleepDataRetriever()
-    print(retriever.retrieveData(20))
+    retriever.retrieveData(20)
 }
 func start(){
     let sleepDatabase = UserSleepDatabase()
@@ -152,7 +152,7 @@ func randomData(_ number: Int) -> ([Date], [SleepData]) {
         dateComponent.hour = Int.random(in: 0...24)
         dateComponent.minute = Int.random(in: 0...59)
         let wokeDate = userCalendar.date(from:dateComponent)
-        sleepData.append(SleepData(Time: Int.random(in: 1...8), slept: sleptDate!, woke: wokeDate!))
+        sleepData.append(SleepData(Time: Double(Int.random(in: 1...8)), slept: sleptDate!, woke: wokeDate!))
         dateData.append(sleptDate!)
     }
     return (dateData, sleepData)
@@ -180,7 +180,7 @@ func goodRandomData(_ number: Int) -> ([Date], [SleepData]) {
         dateComponent.minute = 0
         sleptHours += dateComponent.hour!
         let wokeDate = userCalendar.date(from:dateComponent)
-        sleepData.append(SleepData(Time: sleptHours, slept: sleptDate!, woke: wokeDate!))
+        sleepData.append(SleepData(Time: Double(sleptHours), slept: sleptDate!, woke: wokeDate!))
         dateData.append(sleptDate!)
     }
     return (dateData, sleepData)
