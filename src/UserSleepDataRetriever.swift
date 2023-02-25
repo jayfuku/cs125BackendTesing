@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-//TODO: Conversion from +0000 to local timezone
+//TODO: Conversion from +0000 to local timezone		
 
 class UserSleepDataRetriever {
     //An instance of this gets created every day
@@ -21,15 +21,11 @@ class UserSleepDataRetriever {
     }
     
     private func requestAuth() -> Void{
-        //TODO: Need to figure out how to forgo sharing settings since our app doesnt write any health data to HealthkitAPI
-        let typesToShare = Set([
-                HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.sleepAnalysis)!
-        ])
         let typesToRead = Set([
                 HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.sleepAnalysis)!
         ])
         
-        self.HKStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
+        self.HKStore.requestAuthorization(toShare: nil, read: typesToRead) { (success, error) in
                 if !success{
                     print("Authorization failed")
                 }
@@ -49,6 +45,8 @@ class UserSleepDataRetriever {
         let sleepType = HKCategoryType(.sleepAnalysis)
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
         let sampleQuery = HKSampleQuery(sampleType: sleepType, predicate: nil, limit: 30, sortDescriptors: [sortDescriptor]) { (query, tmpResult, error) in
+                //TODO: How to get values out of callback function?
+                retSleepData.Time = 1
                 if error != nil{
                     print("Error")
                     return
@@ -65,7 +63,7 @@ class UserSleepDataRetriever {
                 }
         }
         
-        //TODO: Queries happen async, we need to find a way for the main thread to wait before returning
+        //TODO: Queries happen async, need to work around it
         self.HKStore.execute(sampleQuery)
         return retSleepData
     }
