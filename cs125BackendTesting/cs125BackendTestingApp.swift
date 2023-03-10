@@ -25,7 +25,7 @@ func retrievalTest()  -> Void {
     retriever.retrieveData(20)
 }
 func start(){
-    let sleepDatabase = UserSleepDatabase()
+    let sleepDatabase = UserSleepDatabase(nil)
     
     print("1. Inserting one piece of data")
     let userCalendar = Calendar.current
@@ -115,7 +115,7 @@ func start(){
     
     //TESTING FOR ERRORS NOT ACCURACY
     print("Testing Calendar")
-    let calendar = UserCalendar()
+    let calendar = UserCalendar(nil)
     print("Testing single event insertion and retrieval")
     let testDate = Date.now
     calendar.addEvent(testDate, "Do Laundry", "I really need to do laundry")
@@ -131,6 +131,16 @@ func start(){
         event = calendar.getEventByDay(i)
     }
     print("Retrievals complete\n")
+    
+    print("Testing calendar storage")
+    LocalStorageInterface.setCalendarDatabase(calendar)
+    print(LocalStorageInterface.retrieveCalendarDatabase() as Any)
+    
+    print("Testing sleepDatabase storage")
+    LocalStorageInterface.setUserSleepDatabase(sleepDatabase)
+    print(LocalStorageInterface.retrieveUserSleepDatabase() as Any)
+    
+    
 }
 
 func randomData(_ number: Int) -> ([Date], [SleepData]) {

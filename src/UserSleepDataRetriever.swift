@@ -11,7 +11,8 @@ import HealthKit
 class UserSleepDataRetriever {
     //An instance of this gets created every day
     
-    private var HKStore: HKHealthStore //Needs to be changed of HKHealthstore type once in actual app
+    private var HKStore: HKHealthStore
+    public var todaysData: SleepData?
     
     init(){
         self.HKStore = HKHealthStore()
@@ -36,6 +37,7 @@ class UserSleepDataRetriever {
     
     private func executeQuery(_ number: Int) -> Void {
         //Create query to get sleep data of most recent sleep
+        // NOTE: Query results are in UTC
         // Params:
         //      number: Amount of data to retrieve, default 20
         var retSleepData = SleepData(Time: -1, slept: Date.now, woke: Date.now)
@@ -45,7 +47,6 @@ class UserSleepDataRetriever {
         
         let sampleQuery = HKSampleQuery(sampleType: sleepType, predicate: nil, limit: number, sortDescriptors: [sortDescriptor]) { (query, tmpResult, error) in
                 //TODO: How to get values out of callback function?
-                //TODO: Analyze healkit api retrieved data deeper and see what causes gaps in inBed status
                 retSleepData.Time = 1
                 if error != nil{
                     print("Error")
@@ -72,6 +73,8 @@ class UserSleepDataRetriever {
                         }
                     }
                     retSleepData.Time = self.timeBetweenDates(retSleepData.woke, retSleepData.slept)
+                    print("Final sleep time \n\t\(retSleepData.woke)\n\t\(retSleepData.slept)")
+                    self.todaysData = retSleepData
                     // ^^ this ret sleep data is the sleep data for the day
                 }
         }

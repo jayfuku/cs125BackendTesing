@@ -7,7 +7,9 @@
 
 import Foundation
 
-class UserCalendar {
+typealias calendarStorage = Dictionary<Int, Dictionary<Int, Dictionary<Int, [CalendarEvent]>>>
+
+class UserCalendar : Codable{
     //Class representation for calendar
     //Should be singleton
     
@@ -24,7 +26,7 @@ class UserCalendar {
     public func addEvent(_ date: Date, _ name: String, _ desc: String){
         //Add an event to the calendar given a date name and description
         //TODO: What should happen if the event already exists on that day and time?
-        let event = CalendarEvent(date, name, desc)
+        let event = CalendarEvent(time: date, name: name, desc: desc)
         
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .day, .month], from: date)
@@ -58,4 +60,14 @@ class UserCalendar {
     }
     
     // TODO: Do we need more detailed ways to get events?
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(self.calendar)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        self.calendar = try container.decode(Dictionary.self)
+    }
 }

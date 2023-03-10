@@ -7,13 +7,15 @@
 
 import Foundation
 
-struct SleepData {
+struct SleepData : Codable{
     var Time: Double
     var slept: Date
     var woke: Date
 }
 
-class UserSleepDatabase{
+typealias sleepStorage = Dictionary<Int, Dictionary<Int, Dictionary<Int, SleepData>>>
+
+class UserSleepDatabase : Codable{
     //This class is what gets stored in local storage
     //We want this to be singleton
     
@@ -54,5 +56,16 @@ class UserSleepDatabase{
         }
         
         self.sleepDatabase[year_]![month_]![day_] = data
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(self.sleepDatabase)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        //When data already exists in localstorage
+        let container = try decoder.singleValueContainer()
+        self.sleepDatabase = try container.decode(Dictionary.self)
     }
 }
