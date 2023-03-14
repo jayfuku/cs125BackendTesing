@@ -26,27 +26,31 @@ class PersonalModel {
     //Should be singleton
     
     private var totSleepAmnts: sleepAmnts
-    private var totSleepTimes: sleepTimes
+    private var SleepTimes: sleepTimes
     private var dayInit: Date //When was this personal model created
     private var consistentSleep: Bool
+    private var sleepStdDev: Double
     private var goodSleepAmnt: Bool
+    private var SleepScore: Int
     
     static var initialized: Bool = false
     
     init(){
         assert(!PersonalModel.initialized, "ERROR: Personal model is already intialized")
         self.totSleepAmnts = sleepAmnts(week: [], month: [], year: [])
-        self.totSleepTimes = sleepTimes(week: [], month: [], year: [])
+        self.SleepTimes = sleepTimes(week: [], month: [], year: [])
         self.dayInit = Date.now
         self.consistentSleep = false
         self.goodSleepAmnt = false
+        self.SleepScore = 0
+        self.sleepStdDev = 0
     }
     
     public func _clearModel(){
         //ONLY FOR TESTING, clear the personal model of all data
         //TODO: Remove in actual app
         self.totSleepAmnts = sleepAmnts(week: [], month: [], year: [])
-        self.totSleepTimes = sleepTimes(week: [], month: [], year: [])
+        self.SleepTimes = sleepTimes(week: [], month: [], year: [])
     }
     
     public func updateAll(data: SleepData) -> Void{
@@ -54,8 +58,10 @@ class PersonalModel {
         //Takes in the most recent SleepData and uses it to update members
         
         self.updateSleepTotals(data)
+        self.updateSleepAmnts(data)
         self.updateConsistentSleep()
         self.updateGoodSleepAmnt()
+        self.updateSleepScore()
     }
     
     public func getConsistentSleep() -> Bool{
@@ -80,20 +86,20 @@ class PersonalModel {
     
     private func updateSleepTotals(_ data: SleepData) -> Void{
         //Pop before adding if array is already full
-        if (self.totSleepTimes.week.count == 7) {
-            self.totSleepTimes.week.removeFirst(1)
+        if (self.SleepTimes.week.count == 7) {
+            self.SleepTimes.week.removeFirst(1)
         }
-        self.totSleepTimes.week.append(data.Time)
+        self.SleepTimes.week.append(data.Time)
         
-        if (self.totSleepTimes.month.count == 31){
-            self.totSleepTimes.month.removeFirst(1)
+        if (self.SleepTimes.month.count == 31){
+            self.SleepTimes.month.removeFirst(1)
         }
-        self.totSleepTimes.month.append(data.Time)
+        self.SleepTimes.month.append(data.Time)
         
-        if (self.totSleepTimes.year.count == 365){
-            self.totSleepTimes.year.removeFirst(1)
+        if (self.SleepTimes.year.count == 365){
+            self.SleepTimes.year.removeFirst(1)
         }
-        self.totSleepTimes.year.append(data.Time)
+        self.SleepTimes.year.append(data.Time)
     }
     
     private func updateSleepAmnts(_ data: SleepData) -> Void{
@@ -118,27 +124,29 @@ class PersonalModel {
     private func updateConsistentSleep() -> Void{
         //Use standard deviation to see if user gets consistent sleep over the past week
         //TODO: Test standard deviation formula with better, more varied data
-        let mean = self.getAverage(self.totSleepTimes.week)
+        let mean = self.getAverage(self.SleepTimes.week)
         var top = 0.0
-        var bottom = 0.0
+        var bottom = self.SleepTimes.week.count
         var stdDeviation = 0.0
         
-        for i in 0..<self.totSleepTimes.week.count {
-            top += pow(Double(Float(self.totSleepTimes.week[i]) - mean), 2)
+        for i in 0..<self.SleepTimes.week.count {
+            top += pow(Double(Float(self.SleepTimes.week[i]) - mean), 2)
         }
-        bottom = top / sqrt(Double(self.totSleepTimes.week.count))
-        stdDeviation = sqrt(bottom)
         
-        if (stdDeviation < 2){
+        stdDeviation = sqrt(top/Double(bottom))
+        
+        if (stdDeviation < 1){
             self.consistentSleep = true
         }
         else {
             self.consistentSleep = false
         }
+        
+        self.sleepStdDev = stdDeviation
     }
     
     private func updateGoodSleepAmnt() -> Void{
-        let avg = self.getAverage(self.totSleepTimes.week)
+        let avg = self.getAverage(self.SleepTimes.week)
         if (6 <= avg && avg <= 11) {
             //CDC study shows more than ~10 hours is an unsafe amount of sleep
             self.goodSleepAmnt = true
@@ -148,5 +156,33 @@ class PersonalModel {
         }
     }
     
-    //TODO: Recommendation algorithm should interface with personal model or be a part of it
+    private func updateSleepScore() -> Void {
+        var tempSleepScore = 100
+        
+        //Consistency
+        // Deduct sleep score based on std deviation of users past sleep up to max of 40
+        // <30 minute std deviation is considered perfect sleep
+
+        var consistencyDeduction = 0.0
+        if (self.sleepStdDev > 0.75){
+            consistencyDeduction += ((self.sleepStdDev - 0.75) / self.sleepStdDev) * 50
+        }
+        tempSleepScore -= Int(consistencyDeduction)
+        
+        
+        //Quantity
+        // Deduct sleep score based on quantity of most recent sleep up to max of 60
+        // Every 10 minutes away from below 7 or above 9 hours of sleep deducts 5 points
+        let recentSleep = self.totSleepAmnts.week[self.totSleepAmnts.week.count-1]
+        if (recentSleep <= 7){
+            tempSleepScore -= min(6000,Int(100.0 * ((7.0-recentSleep) / (10.0/60.0)) * 4.0)) / 100
+
+        }
+        else if (recentSleep >= 9) {
+            tempSleepScore -= min(6000,Int(100.0 * ((recentSleep - 9.0) / (10.0/60.0)) * 4.0)) / 100
+
+        }
+        
+        self.SleepScore = tempSleepScore
+    }
 }
