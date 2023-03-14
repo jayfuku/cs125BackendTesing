@@ -13,10 +13,24 @@ struct cs125BackendTestingApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView().onAppear{
-                start()
-                retrievalTest()
+//                start()
+//                retrievalTest()
+                recommendationTest()
             }
         }
+    }
+}
+
+func recommendationTest(){
+    let personalModel = PersonalModel()
+    let (dateData, sleptData) = consistentData(7) //Generate 50 pieces of data all with consistent sleep
+    for i in 0..<sleptData.count{
+        personalModel.updateAll(data: sleptData[i])
+    }
+    print(sleptData)
+    let recommendationModel = RecommendationAlgorithm(personalModel)
+    for i in recommendationModel.recommend(){
+        print(i.0, "\n", i.1, "\n", i.2, "\n")
     }
 }
 
