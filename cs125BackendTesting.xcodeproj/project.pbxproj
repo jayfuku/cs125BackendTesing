@@ -19,6 +19,7 @@
 		8F213E0329A7453A00E0DB59 /* PersonalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213E0229A7453A00E0DB59 /* PersonalModel.swift */; };
 		8F213E0529A7455400E0DB59 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213E0429A7455400E0DB59 /* Calendar.swift */; };
 		8F213E0729A7456900E0DB59 /* CalendarEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F213E0629A7456900E0DB59 /* CalendarEvent.swift */; };
+		8F8C3B5229BFF46000D838AD /* RecommendationAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8C3B5129BFF46000D838AD /* RecommendationAlgorithm.swift */; };
 		8FA1E36029BAA28E001E0387 /* LocalStorageRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA1E35F29BAA28E001E0387 /* LocalStorageRetriever.swift */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		8F213E0229A7453A00E0DB59 /* PersonalModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalModel.swift; sourceTree = "<group>"; };
 		8F213E0429A7455400E0DB59 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
 		8F213E0629A7456900E0DB59 /* CalendarEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEvent.swift; sourceTree = "<group>"; };
+		8F8C3B5129BFF46000D838AD /* RecommendationAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationAlgorithm.swift; sourceTree = "<group>"; };
 		8FA1E35F29BAA28E001E0387 /* LocalStorageRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorageRetriever.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +153,7 @@
 				8F213E0429A7455400E0DB59 /* Calendar.swift */,
 				8F213E0629A7456900E0DB59 /* CalendarEvent.swift */,
 				8FA1E35F29BAA28E001E0387 /* LocalStorageRetriever.swift */,
+				8F8C3B5129BFF46000D838AD /* RecommendationAlgorithm.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -290,6 +293,7 @@
 				8F213DD529A73D8500E0DB59 /* ContentView.swift in Sources */,
 				8F213DD329A73D8500E0DB59 /* cs125BackendTestingApp.swift in Sources */,
 				8F213E0129A7452700E0DB59 /* UserSleepDatabase.swift in Sources */,
+				8F8C3B5229BFF46000D838AD /* RecommendationAlgorithm.swift in Sources */,
 				8F213E0329A7453A00E0DB59 /* PersonalModel.swift in Sources */,
 				8FA1E36029BAA28E001E0387 /* LocalStorageRetriever.swift in Sources */,
 				8F213E0729A7456900E0DB59 /* CalendarEvent.swift in Sources */,
