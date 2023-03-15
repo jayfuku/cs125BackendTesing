@@ -48,5 +48,23 @@ class LocalStorageInterface {
         return nil
     }
     
-    //TODO: getter/setter for personalmodel, should be implemented after all recommendation algorithm changes are in
+    
+    public static func setPersonalModel(_ p : PersonalModel) -> Void{
+        let userDefaults = UserDefaults.standard
+        let encoder = JSONEncoder()
+        if let data = try? encoder.encode(p) {
+            userDefaults.set(data, forKey: "PersonalModel")
+        }
+    }
+    
+    public static func retrievePersonalModel() -> PersonalModel? {
+        let userDefaults = UserDefaults.standard
+        let decoder = JSONDecoder()
+        if let obj = userDefaults.object(forKey: "PersonalModel") as? Data{
+            if let parsedObj = try? decoder.decode(PersonalModel.self, from: obj){
+                return parsedObj
+            }
+        }
+        return nil
+    }
 }

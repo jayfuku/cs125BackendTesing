@@ -7,27 +7,35 @@
 
 import Foundation
 
-struct sleepAmnts {
+struct sleepAmnts : Codable {
     //Struct that contains the total sleep amounts from the past week, month, and year
     var week: [Double]
     var month: [Double]
     var year: [Double]
 }
 
-struct sleepTimes {
+struct sleepTimes : Codable{
     //Struct that contains sleep times from the apst week, month, and year
     var week: [Double]
     var month: [Double]
     var year: [Double]
 }
 
-class PersonalModel {
+struct storageStruct : Codable{
+    var sleepDates : sleepAmnts
+    var sleepAmounts : sleepTimes
+    var consistentSleep : Bool
+    var sleepStdDev : Double
+    var goodSleepAmnt : Bool
+    var SleepScore : Double
+}
+
+class PersonalModel : Codable {
     //Personal Model for user
     //Should be singleton
     
     private var sleepDates: sleepAmnts
     private var sleepAmounts: sleepTimes
-    private var dayInit: Date //When was this personal model created
     private var consistentSleep: Bool
     private var sleepStdDev: Double
     private var goodSleepAmnt: Bool
@@ -39,7 +47,6 @@ class PersonalModel {
         assert(!PersonalModel.initialized, "ERROR: Personal model is already intialized")
         self.sleepDates = sleepAmnts(week: [], month: [], year: [])
         self.sleepAmounts = sleepTimes(week: [], month: [], year: [])
-        self.dayInit = Date.now
         self.consistentSleep = false
         self.goodSleepAmnt = false
         self.SleepScore = 0.0
@@ -104,7 +111,8 @@ class PersonalModel {
     
     private func updateSleepAmnts(_ data: SleepData) -> Void{
         let calendar = Calendar.current
-        let hour = Double(calendar.component(.hour, from: data.woke))
+        let hour = Double(calendar.component(.hour, from: data.woke)) < 12 ? Double(calendar.component(.hour, from: data.woke)) + 24 : Double(calendar.component(.hour, from: data.woke))
+        
         if (self.sleepDates.week.count == 7) {
             self.sleepDates.week.removeFirst(1)
         }
@@ -123,7 +131,6 @@ class PersonalModel {
     
     private func updateConsistentSleep() -> Void{
         //Use standard deviation to see if user gets consistent sleep over the past week
-        //TODO: Test standard deviation formula with better, more varied data
         let mean = self.getAverage(self.sleepDates.week)
         var top = 0.0
         let bottom = self.sleepDates.week.count
@@ -167,6 +174,7 @@ class PersonalModel {
         if (self.sleepStdDev > 0.75){
             consistencyDeduction += ((self.sleepStdDev - 0.75) / self.sleepStdDev) * 50
         }
+        print("SLEEPDATES", self.sleepDates)
         tempSleepScore -= min(40, consistencyDeduction)
         //Quantity
         // Deduct sleep score based on quantity of most recent sleep up to max of 60
@@ -174,7 +182,6 @@ class PersonalModel {
         let recentSleep = self.sleepAmounts.week[self.sleepAmounts.week.count-1]
         if (recentSleep <= 7){
             tempSleepScore -= Double(min(6000,Int(100.0 * ((7.0-recentSleep) / (10.0/60.0)) * 4.0)) / 100)
-
         }
         else if (recentSleep >= 9) {
             tempSleepScore -= Double(min(6000,Int(100.0 * ((recentSleep - 9.0) / (10.0/60.0)) * 4.0)) / 100)
@@ -190,5 +197,23 @@ class PersonalModel {
     
     public func getSleepScore() -> Double {
         return self.SleepScore
+    }
+    
+    public func encode(to encoder: Encoder) throws{
+        var container = encoder.singleValueContainer()
+        
+        let obj : storageStruct = storageStruct(sleepDates: self.sleepDates, sleepAmounts: self.sleepAmounts, consistentSleep: self.consistentSleep, sleepStdDev: self.sleepStdDev, goodSleepAmnt: self.goodSleepAmnt, SleepScore: self.SleepScore)
+        try container.encode(obj)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let obj = try container.decode(storageStruct.self)
+        self.sleepDates = obj.sleepDates
+        self.sleepAmounts = obj.sleepAmounts
+        self.consistentSleep = obj.consistentSleep
+        self.goodSleepAmnt = obj.goodSleepAmnt
+        self.SleepScore = obj.SleepScore
+        self.sleepStdDev = obj.sleepStdDev
     }
 }
